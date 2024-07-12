@@ -56,6 +56,7 @@ smallvec = []
 repr = []
 indexmap = []
 rc_schema = []
+no_namespaces = []
 
 # EXPERIEMENTAL! use with cauntion
 auto_into_responses = []

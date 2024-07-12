@@ -1645,7 +1645,8 @@ impl SchemaFeatureExt for Vec<Feature> {
 }
 
 /// Reformat a path reference string that was generated using [`quote`] to be used as a nice compact schema reference,
-/// by removing spaces between colon punctuation and `::` and the path segments.
+/// by removing spaces between colon punctuation and `::` and the path segments. Alternatively, will only output the final type
+/// if the no_namespaces feature is enabled
 pub(crate) fn format_path_ref(path: &Path) -> String {
     let mut path = path.clone();
 
@@ -1653,9 +1654,24 @@ pub(crate) fn format_path_ref(path: &Path) -> String {
     if let Some(last_segment) = path.segments.last_mut() {
         last_segment.arguments = PathArguments::None;
     }
-    // :: are not officially supported in the spec
-    // See: https://github.com/juhaku/utoipa/pull/187#issuecomment-1173101405
-    path.to_token_stream().to_string().replace(" :: ", ".")
+
+    #[cfg(feature = "no_namespaces")]
+    {
+        return path
+            .to_token_stream()
+            .to_string()
+            .split("::")
+            .last()
+            .unwrap()
+            .trim()
+            .to_string();
+    }
+    #[cfg(not(feature = "no_namespaces"))]
+    {
+        // :: are not officially supported in the spec
+        // See: https://github.com/juhaku/utoipa/pull/187#issuecomment-1173101405
+        path.to_token_stream().to_string().replace(" :: ", ".")
+    }
 }
 
 #[inline]

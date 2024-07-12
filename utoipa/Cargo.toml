@@ -42,6 +42,7 @@ repr = ["utoipa-gen/repr"]
 preserve_order = []
 preserve_path_order = []
 rc_schema = ["utoipa-gen/rc_schema"]
+no_namespaces = ["utoipa-gen/no_namespaces"]
 
 # EXPERIEMENTAL! use with cauntion
 auto_into_responses = ["utoipa-gen/auto_into_responses"]
